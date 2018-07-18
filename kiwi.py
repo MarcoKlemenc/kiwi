@@ -1,24 +1,16 @@
-import requests, sys
+import sys
+from search import Search
 
 param_mode = sys.argv[1]
 param_code = sys.argv[2]
 max_price = sys.argv[3]
 max_stopovers = sys.argv[4]
 
-def get_response(request):
-    response = False
-    try:
-        response = requests.get(request)
-        return response.json()
-    except:
-        print ("Error")
-        return {}
-
 def get_data(mode):
     from_airports = []
     final = {}
-    dic = get_response('https://api.skypicker.com/flights?flyFrom={}&dateFrom=12/07/2018&dateTo=31/12/2018&curr=ARS&price_to={}&maxstopovers={}&oneforcity=1{}'.format(param_code, max_price, max_stopovers, "&returnFrom=12/07/2018&returnTo=31/12/2018" if "R" in mode else ""))
-    for data in dic.get('data'):
+    req = Search(param_code, None, '01/07/2018', '31/12/2018', "R" in mode, max_price, max_stopovers)
+    for data in req.get():
         code = data['flyTo']
         city = data['cityTo']
         country = data['countryTo']['name']
@@ -29,8 +21,8 @@ def get_data(mode):
     if "A" in mode:
         i = 1
         for airport in from_airports:
-            dic = get_response('https://api.skypicker.com/flights?flyFrom={}&to={}&dateFrom=12/07/2018&dateTo=31/12/2018&curr=ARS&maxstopovers={}&oneforcity=1{}'.format(airport[0], param_code, max_stopovers, "&returnFrom=12/07/2018&returnTo=31/12/2018" if "R" in mode else ""))
-            data = dic.get('data')
+            req = Search(airport[0], param_code, '01/07/2018', '31/12/2018', "R" in mode, None, max_stopovers)
+            data = req.get()
             if data and (data[0]['price'] <= int(max_price) or "R" in mode):
                 final[(airport[0], airport[1], airport[2])] = (data[0]['price'], data[0]['distance'])
             print ("{:.2f}%".format(100 * i / len(from_airports)))
