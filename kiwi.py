@@ -24,7 +24,7 @@ class Kiwi:
             for airport in from_airports:
                 req = Search(airport[0], self.param_code, '01/07/2018', '31/12/2018', "R" in mode, None, self.max_stopovers)
                 data = req.get()
-                if data and (data[0]['price'] <= int(max_price) or "R" in mode):
+                if data and (data[0]['price'] <= int(self.max_price) or "R" in mode):
                     final[(airport[0], airport[1], airport[2])] = (data[0]['price'], data[0]['distance'])
                 print ("{:.2f}%".format(100 * i / len(from_airports)))
                 i += 1

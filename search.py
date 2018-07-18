@@ -18,7 +18,7 @@ class Search:
             return {}
 
     def _build_query(self):
-        q = 'https://api.skypicker.com/flights?flyFrom={}&dateFrom={}&dateTo={}&oneforcity=1'.format(self.fly_from, self.date_from, self.date_to)
+        q = 'https://api.skypicker.com/flights?flyFrom={}&dateFrom={}&dateTo={}&oneforcity=1&curr=ARS'.format(self.fly_from, self.date_from, self.date_to)
         if self.fly_to:
             q += '&to={}'.format(self.fly_to)
         if self.roundtrip:
