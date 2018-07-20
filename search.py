@@ -23,9 +23,9 @@ class Search:
             q += '&to={}'.format(self.fly_to)
         if self.roundtrip:
             q += '&returnFrom={}&returnTo={}'.format(self.date_from, self.date_to)
-        if self.max_price:
+        if self.max_price.isdigit():
             q += '&price_to={}'.format(self.max_price)
-        if self.max_stopovers:
+        if self.max_stopovers.isdigit():
             q += '&maxstopovers={}'.format(self.max_stopovers)
         return q
 

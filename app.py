@@ -32,7 +32,7 @@ class Mywin(wx.Frame):
         l4 = wx.StaticText(panel, -1, "Max stopovers")
         sizer.Add(l4, pos=(4, 1), span=(1, 1), flag=wx.EXPAND)
 
-        self.t4 = wx.TextCtrl(panel, size=(100,50), style=wx.TE_MULTILINE|wx.TE_READONLY)
+        self.t4 = wx.TextCtrl(panel, size=(100,50), style=wx.TE_MULTILINE)
         sizer.Add(self.t4, pos=(4, 2), span=(1, 1), flag=wx.EXPAND)
         self.t4.Bind(wx.EVT_TEXT_ENTER,self.OnEnterPressed)
 
