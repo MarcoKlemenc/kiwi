@@ -32,12 +32,15 @@ class Mywin(wx.Frame):
         l4 = wx.StaticText(panel, -1, "Max stopovers")
         sizer.Add(l4, pos=(4, 1), span=(1, 1), flag=wx.EXPAND)
 
-        self.t4 = wx.TextCtrl(panel, size=(100,50), style=wx.TE_MULTILINE)
+        self.t4 = wx.TextCtrl(panel)
         sizer.Add(self.t4, pos=(4, 2), span=(1, 1), flag=wx.EXPAND)
-        self.t4.Bind(wx.EVT_TEXT_ENTER,self.OnEnterPressed)
 
         self.t5 = wx.TextCtrl(panel, size=(525,500), style=wx.TE_MULTILINE|wx.TE_READONLY)
-        sizer.Add(self.t5, pos=(1, 4), span=(5, 1), flag=wx.EXPAND)
+        sizer.Add(self.t5, pos=(1, 4), span=(6, 1), flag=wx.EXPAND)
+
+        self.t6 = wx.Button(panel, -1, "Search")
+        sizer.Add(self.t6, pos=(5, 1), span=(1, 2), flag=wx.EXPAND)
+        self.t6.Bind(wx.EVT_BUTTON,self.OnClicked)
 
         panel.SetSizerAndFit(sizer)
         self.Center()
@@ -46,7 +49,7 @@ class Mywin(wx.Frame):
     def OnKeyTyped(self, event):
         print (event.GetString())
         
-    def OnEnterPressed(self,event):
+    def OnClicked(self,event):
         kiwi = Kiwi(self.t2.GetValue(), self.t1.GetValue(), self.t3.GetValue(), self.t4.GetValue())
         data = kiwi.execute().items()
         self.t5.SetValue("\n".join("{}\t{}\t{}\t{}, {}".format(k[0], v[0], int(v[1]), k[1], k[2]) for k, v in data))
