@@ -1,61 +1,74 @@
 import wx
 from kiwi import Kiwi
+from datetime import date
 
 class Mywin(wx.Frame):
     def __init__(self, parent, title):
         super(Mywin, self).__init__(parent, title = title,size = (800,600))
         
         panel = wx.Panel(self)
-        sizer = wx.GridBagSizer(6, 5)
+        sizer = wx.GridBagSizer(10, 5)
 
-        l1 = wx.StaticText(panel, -1, "From")
-        sizer.Add(l1, pos=(1, 1), span=(1, 1), flag=wx.EXPAND)
+        from_label = wx.StaticText(panel, -1, "From")
+        sizer.Add(from_label, pos=(1, 1), span=(1, 1), flag=wx.EXPAND)
 
-        self.t1 = wx.TextCtrl(panel)
-        sizer.Add(self.t1, pos=(1, 2), span=(1, 1), flag=wx.EXPAND)
-        self.t1.Bind(wx.EVT_TEXT,self.OnKeyTyped)
-        self.t1.SetMaxLength(3)
-        self.t1.Bind(wx.EVT_TEXT_MAXLEN,self.OnMaxLen)
+        self.from_field = wx.TextCtrl(panel)
+        sizer.Add(self.from_field, pos=(1, 2), span=(1, 1), flag=wx.EXPAND)
+        self.from_field.SetMaxLength(3)
         
-        l2 = wx.StaticText(panel, -1, "Mode")
-        sizer.Add(l2, pos=(2, 1), span=(1, 1), flag=wx.EXPAND)
+        mode_label = wx.StaticText(panel, -1, "Mode")
+        sizer.Add(mode_label, pos=(2, 1), span=(1, 1), flag=wx.EXPAND)
         
-        self.t2 = wx.TextCtrl(panel)
-        sizer.Add(self.t2, pos=(2, 2), span=(1, 1), flag=wx.EXPAND)
+        self.mode_field = wx.TextCtrl(panel)
+        sizer.Add(self.mode_field, pos=(2, 2), span=(1, 1), flag=wx.EXPAND)
 
-        l3 = wx.StaticText(panel, -1, "Max price")
-        sizer.Add(l3, pos=(3, 1), span=(1, 1), flag=wx.EXPAND)
+        max_price_label = wx.StaticText(panel, -1, "Max price")
+        sizer.Add(max_price_label, pos=(3, 1), span=(1, 1), flag=wx.EXPAND)
 
-        self.t3 = wx.TextCtrl(panel)
-        sizer.Add(self.t3, pos=(3, 2), span=(1, 1), flag=wx.EXPAND)
+        self.max_price_field = wx.TextCtrl(panel)
+        sizer.Add(self.max_price_field, pos=(3, 2), span=(1, 1), flag=wx.EXPAND)
 
-        l4 = wx.StaticText(panel, -1, "Max stopovers")
-        sizer.Add(l4, pos=(4, 1), span=(1, 1), flag=wx.EXPAND)
+        max_stopovers_label = wx.StaticText(panel, -1, "Max stopovers")
+        sizer.Add(max_stopovers_label, pos=(4, 1), span=(1, 1), flag=wx.EXPAND)
 
-        self.t4 = wx.TextCtrl(panel)
-        sizer.Add(self.t4, pos=(4, 2), span=(1, 1), flag=wx.EXPAND)
+        self.max_stopovers_field = wx.TextCtrl(panel)
+        sizer.Add(self.max_stopovers_field, pos=(4, 2), span=(1, 1), flag=wx.EXPAND)
 
-        self.t5 = wx.TextCtrl(panel, size=(525,500), style=wx.TE_MULTILINE|wx.TE_READONLY)
-        sizer.Add(self.t5, pos=(1, 4), span=(6, 1), flag=wx.EXPAND)
+        date_from_label = wx.StaticText(panel, -1, "Date from")
+        sizer.Add(date_from_label, pos=(5, 1), span=(1, 1), flag=wx.EXPAND)
 
-        self.t6 = wx.Button(panel, -1, "Search")
-        sizer.Add(self.t6, pos=(5, 1), span=(1, 2), flag=wx.EXPAND)
-        self.t6.Bind(wx.EVT_BUTTON,self.OnClicked)
+        self.date_from_field = wx.TextCtrl(panel)
+        sizer.Add(self.date_from_field, pos=(5, 2), span=(1, 1), flag=wx.EXPAND)
+        self.date_from_field.SetValue(date.today().strftime("%d/%m/%Y"))
+
+        date_to_label = wx.StaticText(panel, -1, "Date to")
+        sizer.Add(date_to_label, pos=(6, 1), span=(1, 1), flag=wx.EXPAND)
+
+        self.date_to_field = wx.TextCtrl(panel)
+        sizer.Add(self.date_to_field, pos=(6, 2), span=(1, 1), flag=wx.EXPAND)
+        self.date_to_field.SetValue(date.today().strftime("%d/%m/%Y"))
+
+        airlines_label = wx.StaticText(panel, -1, "Airlines")
+        sizer.Add(airlines_label, pos=(7, 1), span=(1, 1), flag=wx.EXPAND)
+
+        self.airlines_field = wx.TextCtrl(panel)
+        sizer.Add(self.airlines_field, pos=(7, 2), span=(1, 1), flag=wx.EXPAND)
+
+        self.results = wx.TextCtrl(panel, size=(525,475), style=wx.TE_MULTILINE|wx.TE_READONLY)
+        sizer.Add(self.results, pos=(1, 4), span=(9, 1), flag=wx.EXPAND)
+
+        self.button = wx.Button(panel, -1, "Search")
+        sizer.Add(self.button, pos=(8, 1), span=(1, 2), flag=wx.EXPAND)
+        self.button.Bind(wx.EVT_BUTTON,self.OnClicked)
 
         panel.SetSizerAndFit(sizer)
         self.Center()
         self.Show()
         
-    def OnKeyTyped(self, event):
-        print (event.GetString())
-        
     def OnClicked(self,event):
-        kiwi = Kiwi(self.t2.GetValue(), self.t1.GetValue(), self.t3.GetValue(), self.t4.GetValue())
+        kiwi = Kiwi(self.mode_field.GetValue(), self.from_field.GetValue(), self.max_price_field.GetValue(), self.max_stopovers_field.GetValue(), self.date_from_field.GetValue(), self.date_to_field.GetValue(), self.airlines_field.GetValue())
         data = kiwi.execute().items()
-        self.t5.SetValue("\n".join("{}\t{}\t{}\t{}, {}".format(k[0], v[0], int(v[1]), k[1], k[2]) for k, v in data))
-        
-    def OnMaxLen(self,event):
-        print ("Maximum length reached")
+        self.results.SetValue("\n".join("{}\t{}\t{}\t{}, {}".format(k[0], v[0], int(v[1]), k[1], k[2]) for k, v in data))
         
 app = wx.App()
 Mywin(None, 'Kiwi')

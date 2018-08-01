@@ -2,7 +2,7 @@ import requests
 
 class Search:
 
-    def __init__(self, fly_from, fly_to, date_from, date_to, roundtrip, max_price, max_stopovers):
+    def __init__(self, fly_from, fly_to, date_from, date_to, roundtrip, max_price, max_stopovers, airlines):
         self.fly_from = fly_from
         self.fly_to = fly_to
         self.date_from = date_from
@@ -10,6 +10,7 @@ class Search:
         self.roundtrip = roundtrip
         self.max_price = max_price
         self.max_stopovers = max_stopovers
+        self.airlines = airlines
 
     def _get_response(self, request):
         try:
@@ -27,6 +28,8 @@ class Search:
             q += '&price_to={}'.format(self.max_price)
         if str(self.max_stopovers).isdigit():
             q += '&maxstopovers={}'.format(self.max_stopovers)
+        if self.airlines:
+            q += '&selectedAirlines={}'.format(self.airlines)
         return q
 
     def get(self):

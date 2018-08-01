@@ -1,16 +1,19 @@
 from search import Search
 
 class Kiwi:
-    def __init__(self, param_mode, param_code, max_price, max_stopovers):
+    def __init__(self, param_mode, param_code, max_price, max_stopovers, date_from, date_to, airlines):
         self.param_mode = param_mode
         self.param_code = param_code
         self.max_price = max_price
         self.max_stopovers = max_stopovers
+        self.date_from = date_from
+        self.date_to = date_to
+        self.airlines = airlines
 
     def get_data(self, mode):
         from_airports = []
         final = {}
-        req = Search(self.param_code, None, '01/07/2018', '31/12/2018', "R" in mode, self.max_price, self.max_stopovers)
+        req = Search(self.param_code, None, '01/07/2018', '31/12/2018', "R" in mode, self.max_price, self.max_stopovers, self.airlines)
         for data in req.get():
             code = data['flyTo']
             city = data['cityTo']
@@ -22,7 +25,7 @@ class Kiwi:
         if "A" in mode:
             i = 1
             for airport in from_airports:
-                req = Search(airport[0], self.param_code, '01/07/2018', '31/12/2018', "R" in mode, None, self.max_stopovers)
+                req = Search(airport[0], self.param_code, self.date_from, self.date_to, "R" in mode, None, self.max_stopovers, self.airlines)
                 data = req.get()
                 if data and (data[0]['price'] <= int(self.max_price) or "R" in mode):
                     final[(airport[0], airport[1], airport[2])] = (data[0]['price'], data[0]['distance'])
